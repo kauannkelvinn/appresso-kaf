@@ -1,0 +1,36 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String    @unique
+  whatsappNum   String?   @unique
+  plan          Plan      @default(STANDARD)
+  createdAt     DateTime  @default(now())
+  events        Event[]
+}
+
+enum Plan {
+  STANDARD
+  PREMIUM
+}
+
+model Event {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id])
+  
+  type        String   // 'FINANCE', 'TASK', 'NOTE', 'MEETING'
+  content     String   // texto original ou interpretado
+  metadata    Json?    // IA salva { "value": 50, "date": "2026-02-10" }
+  
+  status      String   @default("PENDING")
+  createdAt   DateTime @default(now())
+}

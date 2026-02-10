@@ -14,7 +14,11 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "Appresso Kafe",
-  description: "Rotina Automatizada",
+  description: "Simplificando sua rotina com IA",
+  icons: {
+    icon: "/logo.ico"
+  }
+
 };
 
 export default function RootLayout({
