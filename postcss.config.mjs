@@ -1,6 +1,9 @@
+import dotenv from 'dotenv';
+dotenv.config();
+
 const config = {
-  plugins: {
-    "@tailwindcss/postcss": {},
+  datasource: {
+    url: process.env.DATABASE_URL,
   },
 };
 
