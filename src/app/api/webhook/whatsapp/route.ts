@@ -27,24 +27,30 @@ export async function POST(req: Request) {
     const contact: WhatsAppContact | undefined = body.entry?.[0]?.changes?.[0]?.value?.contacts?.[0];
 
     if (message?.text?.body) {
+      console.log("MENSAGEM RECEBIDA:", message.text.body); // LOG 1
+
       const text = message.text.body.toLowerCase();
       const userName = contact?.profile?.name || "Kaf User";
       let feedbackMessage = "";
 
       if (text.includes('beber') || text.includes('água') || text.includes('treino')) {
         const habitName = text.includes('água') ? 'Beber 4L Água' : 'Treinar Musculação';
-        await toggleHabitAction(habitName, 'dev_user_kaf');
+        console.log(`Marcando hábito: ${habitName}`); // LOG 2
 
+        await toggleHabitAction(habitName, 'dev_user_kaf');
         feedbackMessage = `Boa, ${userName}! ✅ Hábito "${habitName}" registrado. Foco total! 🚀`;
       } else {
         const result = await processKafCommand('dev_user_kaf', message.text.body);
         feedbackMessage = `Show, ${userName}! Comando "${result.type}" processado.`;
       }
 
+      console.log("FEEDBACK PRONTO:", feedbackMessage); // LOG 3
+
       if (feedbackMessage) {
         const cleanNumber = message.from.replace(/\D/g, '');
-        const response = await sendWhatsAppMessage(cleanNumber, feedbackMessage);
-        console.log("Status da Resposta:", response);
+        console.log("ENVIANDO PARA:", cleanNumber); // LOG 4
+        const waResponse = await sendWhatsAppMessage(cleanNumber, feedbackMessage);
+        console.log("RESPOSTA DA API META:", JSON.stringify(waResponse)); // LOG 5
       }
     }
 
