@@ -43,7 +43,8 @@ export async function POST(req: Request) {
 
       if (feedbackMessage) {
         const cleanNumber = message.from.replace(/\D/g, '');
-        await sendWhatsAppMessage(cleanNumber, feedbackMessage);
+        const response = await sendWhatsAppMessage(cleanNumber, feedbackMessage);
+        console.log("Status da Resposta:", response);
       }
     }
 

@@ -63,9 +63,9 @@ export async function getHabits(userIdentifier: string) {
 
 export async function toggleHabitAction(habitName: string, userIdentifier: string) {
   const habit = await prisma.habit.findFirst({
-    where: { 
+    where: {
       name: { contains: habitName, mode: 'insensitive' },
-      userIdentifier 
+      userIdentifier
     }
   });
 
@@ -74,7 +74,7 @@ export async function toggleHabitAction(habitName: string, userIdentifier: strin
   const today = new Date().getDay();
   const isAlreadyDone = habit.completedDays.includes(today);
 
-  const newDays = isAlreadyDone 
+  const newDays = isAlreadyDone
     ? habit.completedDays.filter((d: number) => d !== today)
     : [...habit.completedDays, today];
 
@@ -85,28 +85,28 @@ export async function toggleHabitAction(habitName: string, userIdentifier: strin
 }
 
 export async function sendWhatsAppMessage(to: string, text: string) {
-  const url = `https://graph.facebook.com/v22.0/${process.env.WHATSAPP_PHONE_NUMBER_ID}/messages`;
-  
-  try {
-    const response = await fetch(url, {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${process.env.WHATSAPP_ACCESS_TOKEN}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        messaging_product: "whatsapp",
-        recipient_type: "individual",
-        to: to,
-        type: "text",
-        text: { body: text }
-      }),
-    });
+  const phoneNumberId = process.env.WHATSAPP_PHONE_NUMBER_ID;
+  const accessToken = process.env.WHATSAPP_ACCESS_TOKEN;
 
-    const data = await response.json();
-    if (!response.ok) console.error("Erro ao enviar WhatsApp:", data);
-    return data;
-  } catch (error) {
-    console.error("Erro na requisição do WhatsApp:", error);
-  }
+  console.log("Tentando enviar para ID:", phoneNumberId);
+
+  const url = `https://graph.facebook.com/v22.0/${phoneNumberId}/messages`;
+
+  const response = await fetch(url, {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${accessToken}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      messaging_product: "whatsapp",
+      to: to,
+      type: "text",
+      text: { body: text }
+    }),
+  });
+
+  const data = await response.json();
+  console.log("Resposta da Meta:", JSON.stringify(data));
+  return data;
 }
