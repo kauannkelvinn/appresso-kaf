@@ -1,7 +1,7 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { processKafCommand, getEvents } from './actions';
+import { useState, useEffect, useCallback } from 'react';
+import { processKafCommand, getEvents, getHabits } from './actions';
 import type { Event } from '@prisma/client';
 import { HistoryList, type KafEvent } from '@/components/ui/HistoryList';
 import { ActivityTimeline } from '@/components/ui/ActivityTimeline';
@@ -12,15 +12,24 @@ export default function LandingPage() {
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<Event | null>(null);
   const [history, setHistory] = useState<KafEvent[]>([]);
+  const [habits, setHabits] = useState<Habit[]>([]);
 
-  const fetchHistory = async () => {
+  const fetchData = useCallback(async () => {
     try {
-      const data = await getEvents('dev_user_kaf');
-      setHistory(data as unknown as KafEvent[]);
-    } catch (e) { console.error("Erro ao carregar histórico:", e); }
-  };
+      const [eventsData, habitsData] = await Promise.all([
+        getEvents('dev_user_kaf'),
+        getHabits('dev_user_kaf')
+      ]);
+      setHistory(eventsData as unknown as KafEvent[]);
+      setHabits(habitsData as unknown as Habit[]);
+    } catch (e) {
+      console.error("Erro ao carregar dados:", e);
+    }
+  }, []);
 
-  useEffect(() => { fetchHistory(); }, []);
+  useEffect(() => {
+    fetchData();
+  }, [fetchData]);
 
   const handleAction = async () => {
     if (!input.trim()) return;
@@ -29,24 +38,20 @@ export default function LandingPage() {
       const data = await processKafCommand('dev_user_kaf', input);
       setResult(data);
       setInput('');
-      await fetchHistory();
-    } catch (e) { console.error("Erro na automação:", e); }
-    finally { setLoading(false); }
+      await fetchData();
+    } catch (e) {
+      console.error("Erro na automação:", e);
+    } finally {
+      setLoading(false);
+    }
   };
 
-  // Atalho: Enter envia, Shift+Enter pula linha
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
       handleAction();
     }
   };
-
-  const mockHabits: Habit[] = [
-    { id: '1', name: 'Treinar Musculação', completedDays: [1, 2, 3] },
-    { id: '2', name: 'Beber 4L Água', completedDays: [0, 1, 2, 4] },
-    { id: '3', name: 'Codar Projetos', completedDays: [1, 2, 3, 4] },
-  ];
 
   return (
     <main className="flex flex-col max-w-350 mx-auto px-4">
@@ -60,12 +65,11 @@ export default function LandingPage() {
         </div>
       </header>
 
-      {/* Hero Stats */}
       <section className="grid grid-cols-3 gap-1 py-4">
         {[
           { label: 'Tasks Created', value: history.length, color: 'text-kaf-primary' },
-          { label: 'Time Saved', value: '4.2h', color: 'text-kaf-success' },
-          { label: 'Efficiency', value: '94%', color: 'text-white' }
+          { label: 'Time Saved', value: `${(history.length * 0.2).toFixed(1)}h`, color: 'text-kaf-success' },
+          { label: 'Habit Score', value: `${Math.round((habits.filter(h => h.completedDays.length > 0).length / (habits.length || 1)) * 100)}%`, color: 'text-white' }
         ].map((stat) => (
           <div key={stat.label} className="bg-[#0D0D0D] p-4 border border-white/5">
             <p className="text-[9px] uppercase tracking-[0.3em] text-gray-600 mb-1 font-bold">{stat.label}</p>
@@ -74,16 +78,14 @@ export default function LandingPage() {
         ))}
       </section>
 
-      {/* Timeline de Atividade */}
       <section className="py-2">
-        <div className="flex justify-between items-center mb-2">
+        <div className="w-full h-30 min-h-30 flex justify-between items-center mb-2">
           <h2 className="text-[9px] uppercase tracking-[0.4em] text-gray-500 font-bold">Activity Evolution</h2>
           <span className="text-[9px] font-mono text-kaf-success">Last 7 Days</span>
         </div>
         <ActivityTimeline events={history} />
       </section>
 
-      {/* Split View */}
       <section className="grid grid-cols-1 md:grid-cols-12 gap-6 py-6">
         <div className="md:col-span-5 space-y-4">
           <div className="relative group">
@@ -116,7 +118,7 @@ export default function LandingPage() {
         </div>
 
         <div className="md:col-span-7 border-l border-white/5 pl-0 md:pl-6 space-y-6">
-          <HabitGrid habits={mockHabits} />
+          {habits.length > 0 && <HabitGrid habits={habits} />}
           <HistoryList events={history} />
         </div>
       </section>

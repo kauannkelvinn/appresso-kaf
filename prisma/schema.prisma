@@ -34,3 +34,11 @@ model Event {
   status      String   @default("PENDING")
   createdAt   DateTime @default(now())
 }
+
+model Habit {
+  id            String   @id @default(cuid())
+  name          String
+  userIdentifier String   // Ex: 'dev_user_kaf' ou o número do WhatsApp
+  completedDays Int[]    // Array de 0 a 6 representando os dias da semana
+  updatedAt     DateTime @updatedAt
+}

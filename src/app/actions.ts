@@ -35,6 +35,7 @@ export async function processKafCommand(userId: string, message: string) {
   return newEvent;
 }
 
+
 export async function getEvents(userId: string) {
   'use server';
   try {
@@ -47,4 +48,38 @@ export async function getEvents(userId: string) {
     console.error("Erro ao buscar histórico:", error);
     return [];
   }
+}
+export async function getHabits(userIdentifier: string) {
+  try {
+    return await prisma.habit.findMany({
+      where: { userIdentifier },
+      orderBy: { name: 'asc' }
+    });
+  } catch (error) {
+    console.error("Erro ao buscar hábitos:", error);
+    return [];
+  }
+}
+
+export async function toggleHabitAction(habitName: string, userIdentifier: string) {
+  const habit = await prisma.habit.findFirst({
+    where: { 
+      name: { contains: habitName, mode: 'insensitive' },
+      userIdentifier 
+    }
+  });
+
+  if (!habit) return null;
+
+  const today = new Date().getDay();
+  const isAlreadyDone = habit.completedDays.includes(today);
+
+  const newDays = isAlreadyDone 
+    ? habit.completedDays.filter((d: number) => d !== today)
+    : [...habit.completedDays, today];
+
+  return await prisma.habit.update({
+    where: { id: habit.id },
+    data: { completedDays: newDays }
+  });
 }

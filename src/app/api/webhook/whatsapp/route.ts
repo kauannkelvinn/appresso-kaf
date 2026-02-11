@@ -1,30 +1,30 @@
-// src/app/api/webhook/whatsapp/route.ts
 import { NextResponse } from 'next/server';
-import { processKafCommand } from '@/app/actions';
+import { processKafCommand, toggleHabitAction } from '@/app/actions';
 
-export async function GET(req: Request) {
-  const { searchParams } = new URL(req.url);
-  const token = searchParams.get('hub.verify_token');
-  const challenge = searchParams.get('hub.challenge');
-
-  if (token === process.env.WHATSAPP_VERIFY_TOKEN) {
-    return new Response(challenge, { status: 200 });
-  }
-  return new Response('Forbidden', { status: 403 });
+interface WhatsAppMessage {
+  from: string;
+  text: { body: string };
 }
 
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    const message = body.entry?.[0]?.changes?.[0]?.value?.messages?.[0];
+    const message: WhatsAppMessage | undefined = body.entry?.[0]?.changes?.[0]?.value?.messages?.[0];
 
     if (message?.text?.body) {
+      const text = message.text.body.toLowerCase();
+      
+      if (text.includes('beber') || text.includes('água') || text.includes('treino')) {
+        const habitName = text.includes('água') ? 'Beber 4L Água' : 'Treinar Musculação';
+        await toggleHabitAction(habitName, 'dev_user_kaf');
+      }
+
       await processKafCommand('dev_user_kaf', message.text.body);
     }
 
     return NextResponse.json({ status: 'ok' });
   } catch (error) {
-    console.error(error); 
-    return NextResponse.json({ error: 'Webhook Error' }, { status: 500 });
+    console.error('Webhook Error:', error);
+    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
   }
 }
