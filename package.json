@@ -1,13 +1,17 @@
 {
   "name": "appresso-kaf",
   "version": "0.1.0",
+  "type": "module",
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "prisma generate && prisma migrate deploy && next build",
+    "build": "prisma generate && next build",
     "start": "next start",
     "lint": "eslint",
-    "db:reset": "prisma migrate reset && prisma db seed"
+    "db:seed": "tsx prisma/seed.ts"
+  },
+  "prisma": {
+    "seed": "tsx prisma/seed.tsgh"
   },
   "dependencies": {
     "@ai-sdk/google": "^3.0.23",
@@ -36,8 +40,5 @@
     "ts-node": "^10.9.2",
     "tsx": "^4.21.0",
     "typescript": "^5"
-  },
-  "prisma": {
-    "seed": "tsx prisma/seed.tsgh"
   }
 }

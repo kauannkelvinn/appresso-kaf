@@ -1,8 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-
-// Tipagem estrita sem o uso de 'any'
 export interface Habit {
   id: string;
   name: string;
@@ -17,7 +15,6 @@ export function HabitGrid({ habits: initialHabits }: HabitGridProps) {
   const [habits, setHabits] = useState<Habit[]>(initialHabits);
   const weekDays = ['D', 'S', 'T', 'Q', 'Q', 'S', 'S'];
 
-  // Função para alternar o status do hábito manualmente via mouse
   const toggleDay = (habitId: string, dayIndex: number) => {
     setHabits(prev => prev.map(habit => {
       if (habit.id === habitId) {

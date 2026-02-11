@@ -27,9 +27,9 @@ model Event {
   userId      String
   user        User     @relation(fields: [userId], references: [id])
   
-  type        String   // 'FINANCE', 'TASK', 'NOTE', 'MEETING'
-  content     String   // texto original ou interpretado
-  metadata    Json?    // IA salva { "value": 50, "date": "2026-02-10" }
+  type        String
+  content     String
+  metadata    Json?
   
   status      String   @default("PENDING")
   createdAt   DateTime @default(now())
@@ -38,7 +38,7 @@ model Event {
 model Habit {
   id            String   @id @default(cuid())
   name          String
-  userIdentifier String   // Ex: 'dev_user_kaf' ou o número do WhatsApp
-  completedDays Int[]    // Array de 0 a 6 representando os dias da semana
+  userIdentifier String
+  completedDays Int[]
   updatedAt     DateTime @updatedAt
 }

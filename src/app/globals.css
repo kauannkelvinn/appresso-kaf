@@ -3,8 +3,8 @@
 @theme {
   --color-background: #0A0A0A;
   --color-foreground: #FFFFFF;
-  --color-kaf-primary: #FFBE0B;  /* Amarelo Energia */
-  --color-kaf-accent: #FB5607;   /* Laranja Ação */
+  --color-kaf-primary: #FFBE0B;
+  --color-kaf-accent: #FB5607;
   --color-kaf-success: #06FFA5;
   --color-kaf-red: #7B0A0A;
   --font-headlines: "Instrument Sans", sans-serif;
