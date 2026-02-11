@@ -4,7 +4,6 @@ import { AreaChart, Area, XAxis, Tooltip, ResponsiveContainer } from 'recharts';
 import { format, subDays } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 
-// Tipagem estrita para evitar o erro de 'any'
 interface TimelineEvent {
   createdAt: Date | string;
 }
@@ -14,7 +13,6 @@ interface ActivityTimelineProps {
 }
 
 export function ActivityTimeline({ events }: ActivityTimelineProps) {
-  // Processamento de dados para os últimos 7 dias
   const data = Array.from({ length: 7 }).map((_, i) => {
     const date = subDays(new Date(), 6 - i);
     const dateStr = format(date, 'yyyy-MM-dd');
