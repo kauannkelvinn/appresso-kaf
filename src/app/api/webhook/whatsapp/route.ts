@@ -34,7 +34,7 @@ export async function POST(req: Request) {
       if (text.includes('beber') || text.includes('água') || text.includes('treino')) {
         const habitName = text.includes('água') ? 'Beber 4L Água' : 'Treinar Musculação';
         await toggleHabitAction(habitName, 'dev_user_kaf');
-        
+
         feedbackMessage = `Boa, ${userName}! ✅ Hábito "${habitName}" registrado. Foco total! 🚀`;
       } else {
         const result = await processKafCommand('dev_user_kaf', message.text.body);
@@ -42,7 +42,8 @@ export async function POST(req: Request) {
       }
 
       if (feedbackMessage) {
-        await sendWhatsAppMessage(message.from, feedbackMessage);
+        const cleanNumber = message.from.replace(/\D/g, '');
+        await sendWhatsAppMessage(cleanNumber, feedbackMessage);
       }
     }
 
