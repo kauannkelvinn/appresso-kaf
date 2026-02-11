@@ -12,7 +12,7 @@ export async function processKafCommand(userId: string, message: string) {
       id: userId,
       email: `${userId}@appressokaf.com`,
       name: 'Dev User',
-      plan: 'STANDARD', 
+      plan: 'STANDARD',
     }
   });
 
@@ -23,7 +23,11 @@ export async function processKafCommand(userId: string, message: string) {
       userId,
       type: interpreted.type,
       content: interpreted.content,
-      metadata: (interpreted.metadata || {}) as Prisma.JsonObject,
+      metadata: {
+        amount: interpreted.amount,
+        category: interpreted.category,
+        dueDate: interpreted.dueDate,
+      } as Prisma.JsonObject,
       status: 'COMPLETED'
     }
   });
