@@ -1,9 +1,8 @@
 import { NextResponse } from 'next/server';
-import { processKafCommand, toggleHabitAction } from '@/app/actions';
-
-interface WhatsAppMessage {
-  from: string;
-  text: { body: string };
+import { processKafCommand, toggleHabitAction, sendWhatsAppMessage } from '@/app/actions';
+interface WhatsAppContact {
+  profile: { name: string };
+  wa_id: string;
 }
 
 export async function GET(req: Request) {
@@ -24,17 +23,27 @@ export async function GET(req: Request) {
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    const message: WhatsAppMessage | undefined = body.entry?.[0]?.changes?.[0]?.value?.messages?.[0];
+    const message = body.entry?.[0]?.changes?.[0]?.value?.messages?.[0];
+    const contact: WhatsAppContact | undefined = body.entry?.[0]?.changes?.[0]?.value?.contacts?.[0];
 
     if (message?.text?.body) {
       const text = message.text.body.toLowerCase();
-      
+      const userName = contact?.profile?.name || "Kaf User";
+      let feedbackMessage = "";
+
       if (text.includes('beber') || text.includes('água') || text.includes('treino')) {
         const habitName = text.includes('água') ? 'Beber 4L Água' : 'Treinar Musculação';
         await toggleHabitAction(habitName, 'dev_user_kaf');
+        
+        feedbackMessage = `Boa, ${userName}! ✅ Hábito "${habitName}" registrado. Foco total! 🚀`;
+      } else {
+        const result = await processKafCommand('dev_user_kaf', message.text.body);
+        feedbackMessage = `Show, ${userName}! Comando "${result.type}" processado.`;
       }
 
-      await processKafCommand('dev_user_kaf', message.text.body);
+      if (feedbackMessage) {
+        await sendWhatsAppMessage(message.from, feedbackMessage);
+      }
     }
 
     return NextResponse.json({ status: 'ok' });

@@ -83,3 +83,30 @@ export async function toggleHabitAction(habitName: string, userIdentifier: strin
     data: { completedDays: newDays }
   });
 }
+
+export async function sendWhatsAppMessage(to: string, text: string) {
+  const url = `https://graph.facebook.com/v22.0/${process.env.WHATSAPP_PHONE_NUMBER_ID}/messages`;
+  
+  try {
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${process.env.WHATSAPP_ACCESS_TOKEN}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        messaging_product: "whatsapp",
+        recipient_type: "individual",
+        to: to,
+        type: "text",
+        text: { body: text }
+      }),
+    });
+
+    const data = await response.json();
+    if (!response.ok) console.error("Erro ao enviar WhatsApp:", data);
+    return data;
+  } catch (error) {
+    console.error("Erro na requisição do WhatsApp:", error);
+  }
+}
