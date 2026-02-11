@@ -34,3 +34,17 @@ export async function processKafCommand(userId: string, message: string) {
 
   return newEvent;
 }
+
+export async function getEvents(userId: string) {
+  'use server';
+  try {
+    return await prisma.event.findMany({
+      where: { userId },
+      orderBy: { createdAt: 'desc' },
+      take: 10,
+    });
+  } catch (error) {
+    console.error("Erro ao buscar histórico:", error);
+    return [];
+  }
+}

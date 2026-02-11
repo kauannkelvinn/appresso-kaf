@@ -1,38 +1,25 @@
 @import "tailwindcss";
 
-:root {
-  /* Cores Base - Appresso Kaf */
-  --background: #050505;
-  --foreground: #ededed;
-  
-  /* Identidade Visual */
-  --kaf-red-seal: #7B0A0A;
-  --kaf-chrome: #C0C0C0;
-  --kaf-chrome-dark: #4A4A4A;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  
-  --color-kaf-red: var(--kaf-red-seal);
-  --color-kaf-silver: var(--kaf-chrome);
-  --color-kaf-silver-dark: var(--kaf-chrome-dark);
-  
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+@theme {
+  --color-background: #0A0A0A;
+  --color-foreground: #FFFFFF;
+  --color-kaf-primary: #FFBE0B;  /* Amarelo Energia */
+  --color-kaf-accent: #FB5607;   /* Laranja Ação */
+  --color-kaf-success: #06FFA5;
+  --color-kaf-red: #7B0A0A;
+  --font-headlines: "Instrument Sans", sans-serif;
+  --font-mono: "JetBrains Mono", monospace;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: 'Geist Sans', Arial, Helvetica, sans-serif;
+  background-color: var(--color-background);
+  color: var(--color-foreground);
+  font-family: var(--font-headlines);
   -webkit-font-smoothing: antialiased;
 }
 
-/* Utilitário efeito cromado */
 .chrome-effect {
-  background: linear-gradient(145deg, var(--kaf-chrome), var(--kaf-chrome-dark));
+  background: linear-gradient(145deg, #C0C0C0, #4A4A4A);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   filter: drop-shadow(0 0 5px rgba(192, 192, 192, 0.3));
