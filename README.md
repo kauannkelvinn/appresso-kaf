@@ -1,7 +1,5 @@
 # ☕ Appresso Kaf: Life OS
 
-![Appresso Kaf Dashboard](https://github.com/seu-usuario/appresso-kaf/raw/main/public/dashboard-preview.png)
-
 O **Appresso Kaf** é um ecossistema de produtividade pessoal que remove a fricção da organização manual através de inteligência artificial e automação via WhatsApp. Inspirado no estilo Neo-Brutalista de Slava Design, o projeto foca em "performance bruta" e simplicidade radical.
 
 ---
@@ -53,7 +51,7 @@ Atualmente em fase de redesenho total para atingir um nível de excelência visu
 1. **Clone o repositório**:
 
 ```bash
-git clone https://github.com/seu-usuario/appresso-kaf.git
+git clone https://github.com/kauannkelvinn/appresso-kaf.git
 ```
 
 2. **Instale as dependências**:
