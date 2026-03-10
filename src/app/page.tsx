@@ -43,20 +43,20 @@ export default function Dashboard() {
           <div className="bg-brand-bg/50 rounded-brand p-6 flex-1 flex flex-col justify-end">
             {/* simulacao de log da ia*/}
             <p className="text-xs font-mono text-brand-gray">IA PROCESSING (0.3s)</p>
-            <div className="h-px w-full bg-brand-blue/20"/>
+            <div className="h-px w-full bg-brand-blue/20" />
             <p className="text-sm font-bold">Reunião agendada para as 14:00h</p>
             <p className="text-[10px] font-mono text-brand-gray flex items-center gap-1">
-              <span className="w-1 h-1 bg-green-500 rounded-full inline-block"/>
+              <span className="w-1 h-1 bg-green-500 rounded-full inline-block" />
               SYSTEM ONLINE
             </p>
           </div>
         </Card>
 
         {/* ACTIVIY EVOLUTION */}
-        <Card className="col-span-8 h-[400px] flex flex-col">
+        <Card className="col-span-8 h-[400px] flex flex-col overflow-hidden">
           <div className="flex justify-between items-start mb-8">
-            <p className="text-[15px] font-black uppercase">Activity Evolution</p>
-            <div className="flex gap-8 text-[12px] font-bold">
+            <p className="text-[15px] font-black uppercase tracking-tight">Activity Evolution</p>
+            <div className="flex gap-8 text-[12px] font-black">
               {["Seg", "Ter", "Qua", "Qui", "Sex", "Sab", "Dom"].map(dia => (
                 <span key={dia}>{dia}</span>
               ))}
@@ -64,8 +64,31 @@ export default function Dashboard() {
           </div>
 
           {/*area do grafico*/}
-          <div className="flex-1 w-full border-b border-brand-black/10 relative">
+          <div className="flex-1 w-full relative">
             {/* componente svg para linha brutalista */}
+            <svg
+              viewBox="0 0 700 280"
+              className="w-full h-full"
+              preserveAspectRatio="none"
+            >
+              <line x1="0" y1="90" x2="700" y2="90" stroke="black" strokeOpacity="0.05" />
+              <line x1="0" y1="180" x2="700" y2="180" stroke="black" strokeOpacity="0.05" />
+              <polyline
+                fill="none"
+                className="stroke-brand-black stroke-[4]"
+                points="
+                  0,230 
+                  116,190 
+                  232,240 
+                  348,130 
+                  464,170 
+                  580,80 
+                  700,100
+                "
+                strokeLinecap="square"
+              />
+            </svg>
+            {/* badge do status */}
             <div className="absolute right-0 top-0 text-right">
               <p className="text-[10px] font-bold">Hoje:</p>
               <p className="text-sm font-black uppercase">12 Tasks</p>
