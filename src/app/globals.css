@@ -1,26 +1,34 @@
 @import "tailwindcss";
 
 @theme {
-  --color-background: #0A0A0A;
-  --color-foreground: #FFFFFF;
-  --color-kaf-primary: #FFBE0B;
-  --color-kaf-accent: #FB5607;
-  --color-kaf-success: #06FFA5;
-  --color-kaf-red: #7B0A0A;
-  --font-headlines: "Instrument Sans", sans-serif;
+  /* -- cores nova identidade -- */
+  --color-brand-bg: #B0ACA9; /* fundo cinza */
+  --color-brand-card: #C6BFB7; /* card normal */
+  --color-brand-red: #FB3100; /* card destaque (vermelho eletrico) */
+  --color-brand-blue: #0066FF; /* IA e Engenharia */
+  --color-brand-gray: #7F7C77; /* Subtitulos */
+  --color-brand-black: #000000; /* texto e strokes */
+
+  /* -- Tipografia -- */
+  --font-display: "var(--font-kh-teka)", sans-serif; /* font kh teka trial */
   --font-mono: "JetBrains Mono", monospace;
+
+  /* -- regras de design (bento grid) */
+  --radius-brand: 10px; /* radius padrao */
+  --border-brand: 1px; /* stroke weight */
 }
 
 body {
-  background-color: var(--color-background);
-  color: var(--color-foreground);
-  font-family: var(--font-headlines);
+  background-color: var(--color-brand-bg);
+  color: var(--color-brand-black);
+  font-family: var(--font-display);
   -webkit-font-smoothing: antialiased;
+  letter-spacing: -0.02em;
 }
 
-.chrome-effect {
-  background: linear-gradient(145deg, #C0C0C0, #4A4A4A);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  filter: drop-shadow(0 0 5px rgba(192, 192, 192, 0.3));
+.card-base {
+  background-color: var(--color-brand-card);
+  border: var(--border-brand) solid rgba(0, 0, 0, 0.14);
+  border-radius: var(--radius-brand);
+  padding: 2rem;
 }

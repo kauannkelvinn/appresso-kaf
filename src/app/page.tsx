@@ -59,6 +59,7 @@ export default function LandingPage() {
         <h1 className="text-xl font-black tracking-tighter uppercase chrome-effect">
           Appresso Kaf
         </h1>
+        <h1 className='text-8xl'>Master <br />You <br />Skills</h1>
         <div className="flex items-center gap-4">
           <span className="text-[9px] font-mono text-gray-500 uppercase tracking-widest">User: dev_user_kaf</span>
           <div className="w-2 h-2 rounded-full bg-kaf-success animate-pulse" />
