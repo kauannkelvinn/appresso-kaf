@@ -16,7 +16,7 @@ export function Card({ children, variant = 'default', className = "" }: CardProp
     <div 
       className={`
         rounded-[10px] 
-        border border-brand-black/14 
+        border border-brand-black/10 
         p-8 
         ${variants[variant]} 
         ${className}
