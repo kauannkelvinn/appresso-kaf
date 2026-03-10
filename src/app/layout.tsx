@@ -5,9 +5,9 @@ import "./globals.css";
 
 const khTeka = localFont({
   src: [
-    { path: "../../public/fonts/KHTekaTRIAL-Medium.woff2", weight: "500", style: "normal" },
-    { path: "../../public/fonts/KHTekaTRIAL-bOLD.woff2", weight: "700", style: "normal" },
-    { path: "../../public/fonts/KHTekaTRIAL-Black.woff2", weight: "900", style: "normal" },
+    { path: "../../public/fonts/khmedium.woff2", weight: "500", style: "normal" },
+    { path: "../../public/fonts/khbold.woff2", weight: "700", style: "normal" },
+    { path: "../../public/fonts/khblack.woff2", weight: "900", style: "normal" },
   ],
   variable: "--font-kh-teka",
   display: "swap",

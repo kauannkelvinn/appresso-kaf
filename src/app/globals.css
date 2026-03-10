@@ -21,7 +21,7 @@
 body {
   background-color: var(--color-brand-bg);
   color: var(--color-brand-black);
-  font-family: var(--font-display);
+  /* font-family: var(--font-display); */
   -webkit-font-smoothing: antialiased;
   letter-spacing: -0.02em;
 }
@@ -31,4 +31,8 @@ body {
   border: var(--border-brand) solid rgba(0, 0, 0, 0.14);
   border-radius: var(--radius-brand);
   padding: 2rem;
+}
+
+* {
+  font-family: var(--font-kh-teka), sans-serif !important;
 }
