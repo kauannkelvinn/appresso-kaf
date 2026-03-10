@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import { JetBrains_Mono } from "next/font/google";
 import "./globals.css";
+import { Header } from "@/components/ui/Header";
 
 const khTeka = localFont({
   src: [
@@ -41,7 +42,8 @@ export default function RootLayout({
         font-display
         `}
        >
-        <main className="max-w-[1440px] mx-auto px-8 py-12">
+        <Header />
+        <main className="max-w-[1440px] mx-7 px-4 py-6">
         {children}
         </main>
       </body>
