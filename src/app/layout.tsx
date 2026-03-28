@@ -43,7 +43,7 @@ export default function RootLayout({
         `}
        >
         <Header />
-        <main className="max-w-[1440px] mx-7 px-4 py-6">
+        <main className="w-full lg:max-w-[1440px] ml-0 lg:ml-[55px] py-6">
         {children}
         </main>
       </body>
