@@ -1,5 +1,7 @@
 import { NextResponse } from 'next/server';
 import { processKafCommand, toggleHabitAction, sendWhatsAppMessage } from '@/app/actions';
+
+export const dynamic = 'force-dynamic';
 interface WhatsAppContact {
   profile: { name: string };
   wa_id: string;
