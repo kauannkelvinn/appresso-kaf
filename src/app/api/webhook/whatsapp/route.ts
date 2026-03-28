@@ -3,9 +3,7 @@ import { processKafCommand, toggleHabitAction, sendWhatsAppMessage } from '@/app
 
 // 1. Força a rota a ser dinâmica para evitar erro de Prisma no build
 export const dynamic = 'force-dynamic';
-
-// 2. Importe o prisma como default (ajuste conforme seu lib/prisma.ts)
-import prisma from '@/lib/prisma';
+export const revalidate = 0; // Garante que nunca seja estático
 
 interface WhatsAppContact {
   profile: { name: string };
