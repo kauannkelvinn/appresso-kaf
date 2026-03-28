@@ -1,10 +1,10 @@
-// src/app/command/page.tsx
+import { CommandCenterView } from "@/features/ai-command/components/CommandCenterView";
+
+export const metadata = {
+  title: "AI Command Center | Appresso Kaf",
+  description: "Neural Engine monitoring and prompt laboratory.",
+};
 
 export default function CommandPage() {
-  return (
-    <div>
-      <h1>AI Command Center</h1>
-      <p>Em desenvolvimento...</p>
-    </div>
-  );
+  return <CommandCenterView />;
 }
