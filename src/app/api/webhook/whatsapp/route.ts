@@ -1,12 +1,15 @@
 import { NextResponse } from 'next/server';
-import { processKafCommand, toggleHabitAction, sendWhatsAppMessage } from '@/app/actions';
 
+// 1. Força a rota a ser dinâmica para evitar erro de Prisma no build
 export const dynamic = 'force-dynamic';
+export const revalidate = 0; // Garante que nunca seja estático
+
 interface WhatsAppContact {
   profile: { name: string };
   wa_id: string;
 }
 
+// VALIDAÇÃO DO WEBHOOK (Obrigatório para o Meta)
 export async function GET(req: Request) {
   const { searchParams } = new URL(req.url);
   const mode = searchParams.get('hub.mode');
@@ -22,43 +25,49 @@ export async function GET(req: Request) {
   return new Response('Forbidden', { status: 403 });
 }
 
+// RECEBIMENTO DE MENSAGENS
 export async function POST(req: Request) {
+  // Import dinâmico das actions para "esconder" o Prisma do compilador de build
+  const { processKafCommand, toggleHabitAction, sendWhatsAppMessage } = await import('@/app/actions');
+
   try {
     const body = await req.json();
+
+    // Log para depuração no painel da Vercel
+    console.log("WEBHOOK RECEBIDO:", JSON.stringify(body));
+
     const message = body.entry?.[0]?.changes?.[0]?.value?.messages?.[0];
     const contact: WhatsAppContact | undefined = body.entry?.[0]?.changes?.[0]?.value?.contacts?.[0];
 
     if (message?.text?.body) {
-      console.log("MENSAGEM RECEBIDA:", message.text.body); // LOG 1
-
       const text = message.text.body.toLowerCase();
       const userName = contact?.profile?.name || "Kaf User";
       let feedbackMessage = "";
 
+      // Lógica de Hábitos Rápidos
       if (text.includes('beber') || text.includes('água') || text.includes('treino')) {
         const habitName = text.includes('água') ? 'Beber 4L Água' : 'Treinar Musculação';
-        console.log(`Marcando hábito: ${habitName}`); // LOG 2
-
+        
+        // Usando o Server Action que você já tem
         await toggleHabitAction(habitName, 'dev_user_kaf');
         feedbackMessage = `Boa, ${userName}! ✅ Hábito "${habitName}" registrado. Foco total! 🚀`;
       } else {
+        // Processamento via IA
         const result = await processKafCommand('dev_user_kaf', message.text.body);
-        feedbackMessage = `Show, ${userName}! Comando "${result.type}" processado.`;
+        feedbackMessage = `Show, ${userName}! Comando "${result.type}" processado com IA.`;
       }
 
-      console.log("FEEDBACK PRONTO:", feedbackMessage); // LOG 3
-
+      // Envio de volta para o WhatsApp
       if (feedbackMessage) {
         const cleanNumber = message.from.replace(/\D/g, '');
-        console.log("ENVIANDO PARA:", cleanNumber); // LOG 4
-        const waResponse = await sendWhatsAppMessage(cleanNumber, feedbackMessage);
-        console.log("RESPOSTA DA API META:", JSON.stringify(waResponse)); // LOG 5
+        await sendWhatsAppMessage(cleanNumber, feedbackMessage);
       }
     }
 
     return NextResponse.json({ status: 'ok' });
   } catch (error) {
     console.error('Webhook Error:', error);
-    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
+    // Retornamos 200 mesmo no erro para o WhatsApp não ficar reenviando a mesma mensagem em loop
+    return NextResponse.json({ error: 'Internal Server Error' }, { status: 200 });
   }
 }
