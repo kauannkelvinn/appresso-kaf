@@ -1,5 +1,4 @@
 import { NextResponse } from 'next/server';
-import { processKafCommand, toggleHabitAction, sendWhatsAppMessage } from '@/app/actions';
 
 // 1. Força a rota a ser dinâmica para evitar erro de Prisma no build
 export const dynamic = 'force-dynamic';
@@ -28,6 +27,9 @@ export async function GET(req: Request) {
 
 // RECEBIMENTO DE MENSAGENS
 export async function POST(req: Request) {
+  // Import dinâmico das actions para "esconder" o Prisma do compilador de build
+  const { processKafCommand, toggleHabitAction, sendWhatsAppMessage } = await import('@/app/actions');
+
   try {
     const body = await req.json();
 
