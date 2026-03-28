@@ -1,5 +1,6 @@
-export default function Home() {
-  return (
-    <></>
-  );
+// src/app/page.tsx
+import { DashboardView } from "@/features/dashboard/components/DashboardView";
+
+export default function Page() {
+  return <DashboardView />;
 }

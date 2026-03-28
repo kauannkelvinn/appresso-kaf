@@ -1,0 +1,44 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String    @unique
+  whatsappNum   String?   @unique
+  plan          Plan      @default(STANDARD)
+  createdAt     DateTime  @default(now())
+  events        Event[]
+}
+
+enum Plan {
+  STANDARD
+  PREMIUM
+}
+
+model Event {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id])
+  
+  type        String
+  content     String
+  metadata    Json?
+  
+  status      String   @default("PENDING")
+  createdAt   DateTime @default(now())
+}
+
+model Habit {
+  id            String   @id @default(cuid())
+  name          String
+  userIdentifier String
+  completedDays Int[]
+  updatedAt     DateTime @updatedAt
+}
