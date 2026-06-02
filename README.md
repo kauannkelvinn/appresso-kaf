@@ -1,89 +1,81 @@
-# ☕ Appresso Kaf: Life OS
+# Appresso Kaf 
 
-O **Appresso Kaf** é um ecossistema de produtividade pessoal que remove a fricção da organização manual através de inteligência artificial e automação via WhatsApp. Inspirado no estilo Neo-Brutalista de Slava Design, o projeto foca em "performance bruta" e simplicidade radical.
-
----
-
-## 🚀 Funcionalidades Atuais
-
-- **WhatsApp Webhook**: Registro instantâneo de hábitos e tarefas via mensagens de texto (ex: "beber água", "treino hoje").
-- **AI Command Center**: Processamento inteligente utilizando Gemini 1.5 para extrair intenções de mensagens informais e converter em dados estruturados.
-- **Habit Tracker**: Grade de hábitos interativa com visualização de consistência diária e progresso percentual.
-- **Activity Evolution**: Gráfico minimalista de produtividade em tempo real, integrado diretamente ao banco de dados Prisma/Supabase.
-- **Hero Stats**: Visualização dramática de KPIs como *Tasks Created*, *Time Saved* e *Habit Score* com tipografia de alto impacto.
+A personal life operating system powered by Artificial Intelligence and WhatsApp automation. Inspired by the Neo-Brutalist aesthetic of Slava Design, this project embraces "raw performance" and radical simplicity.
 
 ---
 
-## 🛠️ Tech Stack
+## Current Features
 
-- **Frontend**: Next.js 15 (App Router) + Tailwind CSS
-- **Backend**: Server Actions + Route Handlers (Webhooks)
-- **Database**: PostgreSQL via Supabase + Prisma ORM
-- **IA**: Google Gemini API
-- **Infra**: Vercel para deploy contínuo e sincronização de variáveis de ambiente
-
----
-
-## 🎨 Design Principles (V2)
-
-Atualmente em fase de redesenho total para atingir um nível de excelência visual baseado no estilo **Slava Design**:
-
-- **Tipografia**: `KH Teka Trial` (Bold/Black) com tamanhos de até 80px para impacto imediato.
-- **Bento Grid**: Organização assimétrica de cards com bordas sólidas (`stroke 14%`) e cantos arredondados (`radius 10`).
-- **Paleta de Cores**:
-  - **Background**: `#B0ACA9` (Cinza Neutro)
-  - **Cards**: `#C6BFB7` (Card Normal) e `#FB3100` (Card de Alerta/Vermelho)
-  - **Texto**: `#000000` (Preto Absoluto) e `#7F7C77` (Subtítulos/Média opacidade)
+*   **WhatsApp Webhook:** Instant logging of habits and tasks via text messages (e.g., "drink water", "training today").
+*   **AI Command Center:** Intelligent processing using Gemini 1.5 to extract user intent from informal messages and convert them into structured data.
+*   **Habit Tracker:** Interactive habit grid featuring daily consistency visualization and percentage-based progress tracking.
+*   **Activity Evolution:** Minimalist real-time productivity graph integrated directly with the Prisma/Supabase database.
+*   **Hero Stats:** Dramatic visualization of Key Performance Indicators (KPIs) such as *Tasks Created*, *Time Saved*, and *Habit Score* using high-impact typography.
 
 ---
 
-## 🗺️ Roadmap de Design
+## Tech Stack
 
-- [x] **01. Global Dashboard** — Visão 360º de Vida, Treino e Finanças.
-- [ ] **02. Deep Focus (Habits)** — Execução diária, consistência e streaks.
-- [ ] **03. Performance (Treino/Dieta)** — Logbook de cargas e contagem de macros via foto.
-- [ ] **04. Wealth (Finanças)** — Gestão de fluxo de caixa e organização de investimentos.
+*   **Frontend:** Next.js 15 (App Router) + Tailwind CSS
+*   **Backend:** Server Actions + Route Handlers (Webhooks)
+*   **Database:** PostgreSQL via Supabase + Prisma ORM
+*   **AI:** Google Gemini API
+*   **Infrastructure:** Vercel for continuous deployment and environment variable synchronization
 
 ---
 
-## 🔧 Como rodar o projeto localmente
+## Design Principles (V2)
 
-1. **Clone o repositório**:
+Currently undergoing a redesign phase to achieve a level of visual excellence based on the Slava Design style:
 
-```bash
+*   **Typography:** KH Teka Trial (Bold/Black) with sizes up to 80px for immediate visual impact.
+*   **Bento Grid:** Asymmetrical organization of cards featuring solid borders (`stroke 14%`) and rounded corners (`radius 18`).
+*   **Color Palette:**
+    *   **Background:** `#B8ACA9` (Neutral Gray)
+    *   **Cards:** `#C6BFB7` (Normal Card) & `#F83100` (Alert/Red Card)
+    *   **Text:** `#000000` (Absolute Black) & `#7F7C77` (Subtitles/Medium opacity)
+
+---
+
+## Design Roadmap
+
+- [x] **01. Global Dashboard** — 360º View of Life, Training, and Finances.
+- [ ] **02. Deep Focus (Habits)** — Daily execution, consistency, and streaks.
+- [ ] **03. Performance (Training/Diet)** — Logbook for weights and macro counting via photo.
+- [ ] **04. Wealth (Finances)** — Cash flow management and investment organization.
+
+---
+
+## Getting Started Locally
+
+Follow these steps to run the project on your local machine.
+
+**1. Clone the repository:**
+\`\`\`bash
 git clone https://github.com/kauannkelvinn/appresso-kaf.git
-```
+\`\`\`
 
-2. **Instale as dependências**:
-
-```bash
+**2. Install dependencies:**
+\`\`\`bash
 npm install
-```
+\`\`\`
 
-3. **Configure as variáveis de ambiente** (`.env`):
-
-```env
+**3. Configure environment variables:** 
+Create a `.env` file in the root directory and add the following keys:
+\`\`\`env
 DATABASE_URL=
 WHATSAPP_ACCESS_TOKEN=
 WHATSAPP_PHONE_NUMBER_ID=
 WHATSAPP_VERIFY_TOKEN=
 GOOGLE_GENERATIVE_AI_API_KEY=
-```
+\`\`\`
 
-4. **Rode as migrações do Prisma**:
-
-```bash
+**4. Run Prisma migrations:**
+\`\`\`bash
 npx prisma migrate dev
-```
+\`\`\`
 
-5. **Inicie o servidor de desenvolvimento**:
-
-```bash
+**5. Start the development server:**
+\`\`\`bash
 npm run dev
-```
-
----
-
-## 📝 Licença
-
-Este projeto está sob a licença MIT. Desenvolvido por Kauan.
+\`\`\`
