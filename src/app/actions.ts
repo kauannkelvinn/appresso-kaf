@@ -1,5 +1,6 @@
 'use server'
 
+import { revalidatePath } from 'next/cache';
 import { prisma } from '@/lib/prisma';
 import { parseUserIntent } from '@/services/ai-parses';
 import { Prisma } from '@prisma/client';
@@ -61,7 +62,11 @@ export async function getHabits(userIdentifier: string) {
   }
 }
 
-export async function toggleHabitAction(habitName: string, userIdentifier: string) {
+export async function toggleHabitAction(habitName: string, userIdentifier: string, specificDay?: number) {
+  // 1. Pega o dia clicado (ou o dia de hoje se vier do WhatsApp)
+  const dayToToggle = specificDay !== undefined ? specificDay : new Date().getDay();
+
+  // 2. Tenta achar o hábito no banco
   const habit = await prisma.habit.findFirst({
     where: {
       name: { contains: habitName, mode: 'insensitive' },
@@ -69,19 +74,34 @@ export async function toggleHabitAction(habitName: string, userIdentifier: strin
     }
   });
 
-  if (!habit) return null;
+  // 3. SE O HÁBITO NÃO EXISTE: Cria ele do zero já com o dia marcado!
+  if (!habit) {
+    await prisma.habit.create({
+      data: {
+        name: habitName,
+        userIdentifier: userIdentifier,
+        completedDays: [dayToToggle]
+      }
+    });
+    
+    // Limpa o cache pra forçar a tela a buscar o dado novo
+    revalidatePath('/habits');
+    return;
+  }
 
-  const today = new Date().getDay();
-  const isAlreadyDone = habit.completedDays.includes(today);
-
+  // 4. SE O HÁBITO JÁ EXISTE: Marca ou desmarca o dia
+  const isAlreadyDone = habit.completedDays.includes(dayToToggle);
   const newDays = isAlreadyDone
-    ? habit.completedDays.filter((d: number) => d !== today)
-    : [...habit.completedDays, today];
+    ? habit.completedDays.filter((d: number) => d !== dayToToggle)
+    : [...habit.completedDays, dayToToggle];
 
-  return await prisma.habit.update({
+  await prisma.habit.update({
     where: { id: habit.id },
     data: { completedDays: newDays }
   });
+
+  // 5. Limpa o cache pra forçar a tela a buscar o dado novo
+  revalidatePath('/habits');
 }
 
 export async function sendWhatsAppMessage(to: string, text: string) {
