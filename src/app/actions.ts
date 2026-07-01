@@ -100,7 +100,6 @@ export async function toggleHabitAction(habitName: string, userIdentifier: strin
     data: { completedDays: newDays }
   });
 
-  // 5. Limpa o cache pra forçar a tela a buscar o dado novo
   revalidatePath('/habits');
 }
 
@@ -129,4 +128,16 @@ export async function sendWhatsAppMessage(to: string, text: string) {
   const data = await response.json();
   console.log("Resposta da Meta:", JSON.stringify(data));
   return data;
+}
+
+export async function createHabitAction(habitName: string, userIdentifier: string) {
+  await prisma.habit.create({
+    data: {
+      name: habitName,
+      userIdentifier,
+      completedDays: []
+    }
+  });
+  
+  revalidatePath('/habits');
 }

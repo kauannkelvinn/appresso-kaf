@@ -2,6 +2,7 @@ import { HabitCard } from "./HabitCard";
 import { Card } from "@/components/ui/Card";
 import { ConsistencyChart } from "./ConsistencyChart";
 import { MicroTasks } from "./MicroTasks";
+import { NewHabitCard } from "./NewHabitCard";
 
 interface Habit {
   id: string;
@@ -57,9 +58,7 @@ export function HabitsView({ initialHabits = [] }: HabitsViewProps) {
               );
             })}
             
-            <Card className="w-[200px] h-[160px] flex items-center justify-center border-dashed opacity-50 cursor-pointer hover:opacity-100 transition-opacity">
-              <p className="text-[13px] font-black uppercase text-center">+ Novo<br/>Hábito</p>
-            </Card>
+            <NewHabitCard />
           </div>
 
           <ConsistencyChart />
