@@ -16,12 +16,11 @@ A personal life operating system powered by Artificial Intelligence and WhatsApp
 
 ## Tech Stack
 
-*   **Frontend:** Next.js 15 (App Router) + Tailwind CSS
-*   **Backend:** Server Actions + Route Handlers (Webhooks)
-*   **Database:** PostgreSQL via Supabase + Prisma ORM
-*   **AI:** Google Gemini API
-*   **Infrastructure:** Vercel for continuous deployment and environment variable synchronization
-
+- **Frontend**: Next.js 16 (App Router) + Tailwind CSS
+- **Backend**: Server Actions + Route Handlers (Webhooks)
+- **Database**: PostgreSQL Serverless via Neon.tech + Prisma ORM
+- **IA**: Google Gemini API
+- **Infra**: Ambiente de desenvolvimento local (Deployment pendente)
 ---
 
 ## Design Principles (V2)

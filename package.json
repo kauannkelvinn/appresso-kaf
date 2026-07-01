@@ -11,22 +11,17 @@
     "db:seed": "tsx prisma/seed.ts"
   },
   "prisma": {
-    "seed": "tsx prisma/seed.tsgh"
+    "seed": "tsx prisma/seed.ts"
   },
   "dependencies": {
     "@ai-sdk/google": "^3.0.23",
-    "@ai-sdk/openai": "^3.0.26",
-    "@prisma/adapter-pg": "^7.6.0",
-    "@prisma/client": "^7.6.0",
+    "@prisma/client": "^6.19.3",
     "ai": "^6.0.78",
-    "date-fns": "^4.1.0",
     "dotenv": "^17.2.4",
-    "lucide-react": "^0.577.0",
     "next": "16.1.6",
-    "pg": "^8.20.0",
+    "prisma": "^6.19.3",
     "react": "19.2.3",
     "react-dom": "19.2.3",
-    "recharts": "^3.7.0",
     "zod": "^4.3.6"
   },
   "devDependencies": {

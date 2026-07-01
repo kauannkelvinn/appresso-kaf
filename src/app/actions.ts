@@ -1,6 +1,7 @@
 'use server'
 
-import prisma from '@/lib/prisma';
+import { revalidatePath } from 'next/cache';
+import { prisma } from '@/lib/prisma';
 import { parseUserIntent } from '@/services/ai-parses';
 import { Prisma } from '@prisma/client';
 
@@ -35,33 +36,9 @@ export async function processKafCommand(userId: string, message: string) {
   return newEvent;
 }
 
+export async function toggleHabitAction(habitName: string, userIdentifier: string, specificDay?: number) {
+  const dayToToggle = specificDay !== undefined ? specificDay : new Date().getDay();
 
-export async function getEvents(userId: string) {
-  'use server';
-  try {
-    return await prisma.event.findMany({
-      where: { userId },
-      orderBy: { createdAt: 'desc' },
-      take: 10,
-    });
-  } catch (error) {
-    console.error("Erro ao buscar histórico:", error);
-    return [];
-  }
-}
-export async function getHabits(userIdentifier: string) {
-  try {
-    return await prisma.habit.findMany({
-      where: { userIdentifier },
-      orderBy: { name: 'asc' }
-    });
-  } catch (error) {
-    console.error("Erro ao buscar hábitos:", error);
-    return [];
-  }
-}
-
-export async function toggleHabitAction(habitName: string, userIdentifier: string) {
   const habit = await prisma.habit.findFirst({
     where: {
       name: { contains: habitName, mode: 'insensitive' },
@@ -69,19 +46,30 @@ export async function toggleHabitAction(habitName: string, userIdentifier: strin
     }
   });
 
-  if (!habit) return null;
+  if (!habit) {
+    await prisma.habit.create({
+      data: {
+        name: habitName,
+        userIdentifier: userIdentifier,
+        completedDays: [dayToToggle]
+      }
+    });
+    
+    revalidatePath('/habits');
+    return;
+  }
 
-  const today = new Date().getDay();
-  const isAlreadyDone = habit.completedDays.includes(today);
-
+  const isAlreadyDone = habit.completedDays.includes(dayToToggle);
   const newDays = isAlreadyDone
-    ? habit.completedDays.filter((d: number) => d !== today)
-    : [...habit.completedDays, today];
+    ? habit.completedDays.filter((d: number) => d !== dayToToggle)
+    : [...habit.completedDays, dayToToggle];
 
-  return await prisma.habit.update({
+  await prisma.habit.update({
     where: { id: habit.id },
     data: { completedDays: newDays }
   });
+
+  revalidatePath('/habits');
 }
 
 export async function sendWhatsAppMessage(to: string, text: string) {
@@ -109,4 +97,16 @@ export async function sendWhatsAppMessage(to: string, text: string) {
   const data = await response.json();
   console.log("Resposta da Meta:", JSON.stringify(data));
   return data;
+}
+
+export async function createHabitAction(habitName: string, userIdentifier: string) {
+  await prisma.habit.create({
+    data: {
+      name: habitName,
+      userIdentifier,
+      completedDays: []
+    }
+  });
+  
+  revalidatePath('/habits');
 }

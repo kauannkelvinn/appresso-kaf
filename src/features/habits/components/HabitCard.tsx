@@ -1,14 +1,41 @@
+"use client";
+
+import { useOptimistic, useTransition } from "react";
 import { Card } from "@/components/ui/Card";
+import { toggleHabitAction } from "@/app/actions";
 
 interface HabitCardProps {
   title: string;
   subtitle: string;
   streak: number;
-  completedDays: boolean[]; // Array de 7 posições para os quadradinhos
+  completedDays: boolean[];
   variant?: 'default' | 'red';
+  originalName: string;
 }
 
-export function HabitCard({ title, subtitle, streak, completedDays, variant = 'default' }: HabitCardProps) {
+export function HabitCard({ title, subtitle, streak, completedDays, variant = 'default', originalName }: HabitCardProps) {
+  const [isPending, startTransition] = useTransition();
+
+  const [optimisticDays, toggleOptimisticDay] = useOptimistic(
+    completedDays,
+    (currentDays, clickedIndex: number) => {
+      const newDays = [...currentDays];
+      newDays[clickedIndex] = !newDays[clickedIndex];
+      return newDays;
+    }
+  );
+
+  const handleSquareClick = (index: number) => {
+    const dbDayMapping = [1, 2, 3, 4, 5, 6, 0];
+    const dayToToggleDB = dbDayMapping[index];
+
+    startTransition(async () => {
+      toggleOptimisticDay(index);
+      
+      await toggleHabitAction(originalName, 'dev_user_kaf', dayToToggleDB);
+    });
+  };
+
   return (
     <Card variant={variant} className="w-[280px] h-[160px] flex flex-col justify-between p-6">
       <div className="flex flex-col">
@@ -17,17 +44,16 @@ export function HabitCard({ title, subtitle, streak, completedDays, variant = 'd
       </div>
 
       <div className="flex flex-col gap-4">
-        {/* Quadradinhos de progresso */}
         <div className="flex gap-1.5">
-          {completedDays.map((isDone, i) => (
+          {optimisticDays.map((isDone, i) => (
             <div 
               key={i} 
-              className={`w-6 h-6 border border-black/20 rounded-[4px] ${isDone ? 'bg-black' : 'bg-transparent'}`} 
+              onClick={() => handleSquareClick(i)}
+              className={`w-6 h-6 border border-black/20 rounded-[4px] cursor-pointer transition-colors hover:scale-110 ${isDone ? 'bg-black' : 'bg-transparent'} ${isPending ? 'opacity-80' : 'opacity-100'}`} 
             />
           ))}
         </div>
 
-        {/* Streak com ícone de chama */}
         <div className="flex items-center justify-end gap-1 text-[11px] font-black uppercase">
           <span>🔥 {streak} DIAS</span>
         </div>
