@@ -16,12 +16,11 @@ O **Appresso Kaf** é um ecossistema de produtividade pessoal que remove a fric�
 
 ## 🛠️ Tech Stack
 
-- **Frontend**: Next.js 15 (App Router) + Tailwind CSS
+- **Frontend**: Next.js 16 (App Router) + Tailwind CSS
 - **Backend**: Server Actions + Route Handlers (Webhooks)
-- **Database**: PostgreSQL via Supabase + Prisma ORM
+- **Database**: PostgreSQL Serverless via Neon.tech + Prisma ORM
 - **IA**: Google Gemini API
-- **Infra**: Vercel para deploy contínuo e sincronização de variáveis de ambiente
-
+- **Infra**: Ambiente de desenvolvimento local (Deployment pendente)
 ---
 
 ## 🎨 Design Principles (V2)
