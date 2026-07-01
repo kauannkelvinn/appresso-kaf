@@ -3,6 +3,7 @@
 import { useState, useRef, useEffect } from "react";
 import { Card } from "@/components/ui/Card";
 import { createHabitAction } from "@/app/actions";
+import { APP_USER_ID } from "@/lib/constants";
 
 export function NewHabitCard() {
   const [isEditing, setIsEditing] = useState(false);
@@ -19,7 +20,7 @@ export function NewHabitCard() {
   const handleKeyDown = async (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter' && habitName.trim() !== '') {
       setIsPending(true);
-      await createHabitAction(habitName, 'dev_user_kaf');
+      await createHabitAction(habitName, APP_USER_ID );
       setHabitName("");
       setIsEditing(false);
       setIsPending(false);
