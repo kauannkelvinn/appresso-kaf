@@ -36,13 +36,13 @@ export async function processKafCommand(userId: string, message: string) {
   return newEvent;
 }
 
-export async function toggleHabitAction(habitName: string, userIdentifier: string, specificDay?: number) {
+export async function toggleHabitAction(habitName: string, userId: string, specificDay?: number) {
   const dayToToggle = specificDay !== undefined ? specificDay : new Date().getDay();
 
   const habit = await prisma.habit.findFirst({
     where: {
       name: { contains: habitName, mode: 'insensitive' },
-      userIdentifier
+      userId
     }
   });
 
@@ -50,12 +50,22 @@ export async function toggleHabitAction(habitName: string, userIdentifier: strin
     await prisma.habit.create({
       data: {
         name: habitName,
-        userIdentifier: userIdentifier,
+        userId: userId,
         completedDays: [dayToToggle]
       }
     });
     
+    await prisma.event.create({
+      data: {
+        userId: userId,
+        type: 'HABIT',
+        content: `Novo hábito iniciado: ${habitName}`,
+        status: 'COMPLETED'
+      }
+    });
+    
     revalidatePath('/habits');
+    revalidatePath('/');
     return;
   }
 
@@ -69,13 +79,37 @@ export async function toggleHabitAction(habitName: string, userIdentifier: strin
     data: { completedDays: newDays }
   });
 
+  if (!isAlreadyDone) {
+    await prisma.event.create({
+      data: {
+        userId: userId,
+        type: 'HABIT',
+        content: `Hábito concluído: ${habitName}`,
+        status: 'COMPLETED'
+      }
+    });
+  }
+
   revalidatePath('/habits');
+  revalidatePath('/'); // Atualiza o Dashboard
 }
-
-export async function sendWhatsAppMessage(to: string, text: string) {
-  const phoneNumberId = process.env.WHATSAPP_PHONE_NUMBER_ID;
-  const accessToken = process.env.WHATSAPP_ACCESS_TOKEN;
-
+  
+  export async function createHabitAction(habitName: string, userId: string) {
+    await prisma.habit.create({
+      data: {
+        name: habitName,
+        userId,
+        completedDays: []
+      }
+    });
+    
+    revalidatePath('/habits');
+  }
+  
+  export async function sendWhatsAppMessage(to: string, text: string) {
+    const phoneNumberId = process.env.WHATSAPP_PHONE_NUMBER_ID;
+    const accessToken = process.env.WHATSAPP_ACCESS_TOKEN;
+    
   console.log("Tentando enviar para ID:", phoneNumberId);
 
   const url = `https://graph.facebook.com/v22.0/${phoneNumberId}/messages`;
@@ -97,16 +131,4 @@ export async function sendWhatsAppMessage(to: string, text: string) {
   const data = await response.json();
   console.log("Resposta da Meta:", JSON.stringify(data));
   return data;
-}
-
-export async function createHabitAction(habitName: string, userIdentifier: string) {
-  await prisma.habit.create({
-    data: {
-      name: habitName,
-      userIdentifier,
-      completedDays: []
-    }
-  });
-  
-  revalidatePath('/habits');
 }

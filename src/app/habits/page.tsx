@@ -6,9 +6,8 @@ export const metadata = {
 };
 
 export default async function HabitsPage() {
-  // Busca os hábitos reais do banco de dados atrelados ao usuário dev
   const habits = await prisma.habit.findMany({
-    where: { userIdentifier: 'dev_user_kaf' },
+    where: { userId: 'dev_user_kaf' },
     orderBy: { updatedAt: 'desc' }
   });
 

@@ -7,13 +7,14 @@ generator client {
 }
 
 model User {
-  id            String    @id @default(cuid())
-  name          String?
-  email         String    @unique
-  whatsappNum   String?   @unique
-  plan          Plan      @default(STANDARD)
-  createdAt     DateTime  @default(now())
-  events        Event[]
+  id          String   @id @default(cuid())
+  name        String?
+  email       String   @unique
+  whatsappNum String?  @unique
+  plan        Plan     @default(STANDARD)
+  createdAt   DateTime @default(now())
+  events      Event[]
+  habits      Habit[]
 }
 
 enum Plan {
@@ -22,22 +23,23 @@ enum Plan {
 }
 
 model Event {
-  id          String   @id @default(cuid())
-  userId      String
-  user        User     @relation(fields: [userId], references: [id])
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
   
-  type        String
-  content     String
-  metadata    Json?
+  type      String
+  content   String
+  metadata  Json?
   
-  status      String   @default("PENDING")
-  createdAt   DateTime @default(now())
+  status    String   @default("PENDING")
+  createdAt DateTime @default(now())
 }
 
 model Habit {
   id            String   @id @default(cuid())
   name          String
-  userIdentifier String
+  userId        String
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   completedDays Int[]
   updatedAt     DateTime @updatedAt
 }
