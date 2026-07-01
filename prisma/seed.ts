@@ -2,15 +2,25 @@ import { PrismaClient } from '@prisma/client'
 const prisma = new PrismaClient()
 
 async function main() {
-  const userIdentifier = 'dev_user_kaf';
-  
+  const devUserId = 'dev_user_kaf';
+
+  await prisma.user.upsert({
+    where: { id: devUserId },
+    update: {},
+    create: {
+      id: devUserId,
+      email: 'dev@appressokaf.com',
+      name: 'Kauan (Dev)',
+    }
+  });
+
   await prisma.habit.createMany({
     data: [
-      { name: 'Treinar Musculação', userIdentifier, completedDays: [] },
-      { name: 'Beber 4L Água', userIdentifier, completedDays: [] },
-      { name: 'Codar Projetos', userIdentifier, completedDays: [] },
+      { name: 'Treinar Musculação', userId: devUserId, completedDays: [] },
+      { name: 'Beber 4L Água', userId: devUserId, completedDays: [] },
+      { name: 'Codar Projetos', userId: devUserId, completedDays: [] },
     ],
-  })
+  });
 }
 
 main()
